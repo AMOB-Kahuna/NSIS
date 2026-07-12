@@ -184,7 +184,6 @@ router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (
   
   if (!email || !fullName || !password) {
     results.failed.push({ student, error: 'Missing email, fullName, or password' });
-    continue;
   }
 
   try {
@@ -197,7 +196,7 @@ router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (
 
     if (authError || !authData.user) {
       results.failed.push({ student, error: authError?.message || 'Failed to create auth user' });
-      continue;
+      // continue;
     }
 
     const userId = authData.user.id;
@@ -216,7 +215,7 @@ router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (
     if (profileError) {
       await supabaseAdmin.auth.admin.deleteUser(userId);
       results.failed.push({ student, error: profileError.message });
-      continue;
+      // continue;
     }
 
     // 3. Insert Student
@@ -233,7 +232,7 @@ router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (
       await supabaseAdmin.from('profiles').delete().eq('id', userId);
       await supabaseAdmin.auth.admin.deleteUser(userId);
       results.failed.push({ student, error: studentError.message });
-      continue;
+      // continue;
     }
 
     // 4. Enroll in section if section_id is provided
@@ -248,7 +247,7 @@ router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (
       if (enrollError) {
         // Non-blocking but log it
         results.succeeded.push({ email, fullName, userId, studentId: studData.id, enrollmentWarning: enrollError.message });
-        continue;
+        // continue;
       }
     }
 
@@ -257,7 +256,7 @@ router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (
     results.failed.push({ student, error: err.message });
   }
 
-  res.status(207).json(results);
+  return res.status(207).json(results);
 });
 
 // Bulk Import Students (CSV or JSON)

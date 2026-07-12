@@ -11,7 +11,7 @@ export default function AdminDashboard() {
   const [sections, setSections] = useState([]);
 
   // Active states
-  const [activeTab, setActiveTab] = useState('config'); // 'config' | 'import'
+  const [activeTab, setActiveTab] = useState('config'); // 'config' | 'register'
   const [editSchoolSettings, setEditSchoolSettings] = useState(false) // 'view' | 'edit'
   const [selectedTermId, setSelectedTermId] = useState('');
 
@@ -162,7 +162,7 @@ export default function AdminDashboard() {
         <div className="flex bg-gray-900 border border-gray-800 rounded-lg p-1">
           <button
             onClick={() => setActiveTab('config')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer flex items-center gap-2 ${activeTab === 'config' ? 'bg-purple-600 text-white shadow-lg' : 'text-gray-400 hover:text-white'
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer flex items-center gap-2 ${activeTab === 'config' ? 'bg-green-800 text-white shadow-lg' : 'text-gray-400 hover:text-white'
               }`}
           >
             <Settings className="w-4 h-4" />
@@ -170,12 +170,12 @@ export default function AdminDashboard() {
           </button>
           <button
             id="tab-import"
-            onClick={() => setActiveTab('import')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer flex items-center gap-2 ${activeTab === 'import' ? 'bg-purple-600 text-white shadow-lg' : 'text-gray-400 hover:text-white'
+            onClick={() => setActiveTab('register')}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer flex items-center gap-2 ${activeTab === 'register' ? 'bg-green-800 text-white shadow-lg' : 'text-gray-400 hover:text-white'
               }`}
           >
             <Users className="w-4 h-4" />
-            Bulk Import Students
+            Register Students
           </button>
         </div>
       </div>
@@ -431,8 +431,61 @@ export default function AdminDashboard() {
       )}
 
       {/* Bulk Import Tab */}
-      {activeTab === 'import' && (
+      {activeTab === 'register' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Single Registration */}
+          <div className="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+            <div>
+              <h2 className="text-xl font-semibold mb-4 text-white">Register Student</h2>
+              <form onSubmit={handleCreateSchool} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={schoolName}
+                    onChange={(e) => {setSchoolName(e.target.value)}}
+                    placeholder="johndoe@ihs.edu"
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">
+                    Fullname
+                  </label>
+                  <input
+                    type="text"
+                    value={schoolAddress}
+                    onChange={(e) => setSchoolAddress(e.target.value)}
+                    placeholder="John Doe"
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">
+                    Password
+                  </label>
+                  <input
+                    type="text"
+                    value={schoolAddress}
+                    onChange={(e) => setSchoolAddress(e.target.value)}
+                    placeholder="***************"
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className={`w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center justify-center gap-1 cursor-pointer`}
+                >
+                  <Plus className="w-4 h-4" /> Register
+                </button>
+              </form>
+            </div>
+          </div>
+
           {/* Main upload form */}
           <div className="lg:col-span-2 glass-panel p-6 rounded-2xl">
             <h2 className="text-xl font-semibold mb-4 text-white">Import Student Accounts</h2>
@@ -479,7 +532,7 @@ export default function AdminDashboard() {
                 id="process-import-btn"
                 type="submit"
                 disabled={importing}
-                className="py-2.5 px-6 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center gap-2 cursor-pointer"
+                className="py-2.5 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-purple-800 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center gap-2 cursor-pointer"
               >
                 <FileText className="w-4 h-4" />
                 {importing ? 'Processing Accounts...' : 'Process Bulk Import'}

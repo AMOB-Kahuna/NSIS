@@ -80,7 +80,7 @@ function DashboardLayout({ children }) {
       {/* Top Navbar */}
       <header className="glass-panel border-b border-gray-800/80 px-6 py-4 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md">
         <Link to="/" className="flex items-center gap-2">
-          <div className="p-2 bg-purple-600/20 text-purple-400 border border-purple-500/20 rounded-lg">
+          <div className="p-2 bg-green-700/20 text-green-400 border border-green-600/20 rounded-lg">
             <GraduationCap className="w-5 h-5" />
           </div>
           <span className="font-bold text-white text-lg tracking-tight">EduSIS & LMS</span>
