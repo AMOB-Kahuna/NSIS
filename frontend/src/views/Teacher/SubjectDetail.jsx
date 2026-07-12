@@ -141,7 +141,7 @@ export default function SubjectDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-purple-400">
+      <div className="min-h-screen flex items-center justify-center text-green-400">
         <Loader2 className="w-8 h-8 animate-spin" />
         <span className="ml-3 font-semibold text-lg">Loading Course Room...</span>
       </div>
@@ -151,7 +151,7 @@ export default function SubjectDetail() {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Navigation */}
-      <Link to="/teacher" className="inline-flex items-center text-sm font-semibold text-purple-400 hover:text-purple-300 gap-1 mb-6 transition-colors">
+      <Link to="/teacher" className="inline-flex items-center text-sm font-semibold text-green-600 hover:text-green-300 gap-1 mb-6 transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to Dashboard
       </Link>
 
@@ -166,20 +166,20 @@ export default function SubjectDetail() {
         <div className="flex gap-2">
           <button
             onClick={() => setActiveForm(activeForm === 'lesson' ? null : 'lesson')}
-            className="px-3 py-1.5 bg-gray-900 border border-gray-800 hover:border-purple-500 text-purple-400 hover:text-purple-300 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-1.5 bg-gray-900 border border-gray-800 hover:border-blue-500 text-blue-400 hover:text-blue-300 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" /> Add Lesson
           </button>
           <button
             onClick={() => setActiveForm(activeForm === 'assignment' ? null : 'assignment')}
-            className="px-3 py-1.5 bg-gray-900 border border-gray-800 hover:border-purple-500 text-purple-400 hover:text-purple-300 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-1.5 bg-gray-900 border border-gray-800 hover:border-blue-500 text-blue-400 hover:text-blue-300 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" /> Add Assignment
           </button>
           <button
             id="btn-add-quiz"
             onClick={() => setActiveForm(activeForm === 'quiz' ? null : 'quiz')}
-            className="px-3 py-1.5 bg-gray-900 border border-gray-800 hover:border-purple-500 text-purple-400 hover:text-purple-300 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-1.5 bg-gray-900 border border-gray-800 hover:border-blue-500 text-blue-400 hover:text-blue-300 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" /> Add Quiz
           </button>
@@ -188,7 +188,7 @@ export default function SubjectDetail() {
 
       {/* Forms Drawer */}
       {activeForm && (
-        <div className="glass-panel p-6 rounded-2xl mb-8 border-purple-500/20 shadow-xl max-w-2xl mx-auto">
+        <div className="glass-panel p-6 rounded-2xl mb-8 border-green-500/20 shadow-xl max-w-2xl mx-auto">
           {activeForm === 'lesson' && (
             <form onSubmit={handleSaveLesson} className="space-y-4">
               <h2 className="text-lg font-bold text-white mb-2">New Lesson Material</h2>
@@ -200,7 +200,7 @@ export default function SubjectDetail() {
                   value={lessonForm.title}
                   onChange={e => setLessonForm({ ...lessonForm, title: e.target.value })}
                   placeholder="E.g. Introduction to Quadratics"
-                  className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -210,7 +210,7 @@ export default function SubjectDetail() {
                   value={lessonForm.content}
                   onChange={e => setLessonForm({ ...lessonForm, content: e.target.value })}
                   placeholder="Enter lesson text..."
-                  className="w-full p-3 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full p-3 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -220,12 +220,12 @@ export default function SubjectDetail() {
                   value={lessonForm.file_url}
                   onChange={e => setLessonForm({ ...lessonForm, file_url: e.target.value })}
                   placeholder="https://example.com/slide.pdf"
-                  className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                 />
               </div>
               <button
                 type="submit"
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium shadow-md transition-colors cursor-pointer"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow-md transition-colors cursor-pointer"
               >
                 Publish Lesson
               </button>
@@ -243,7 +243,7 @@ export default function SubjectDetail() {
                   value={assignForm.title}
                   onChange={e => setAssignForm({ ...assignForm, title: e.target.value })}
                   placeholder="E.g. Homework 1"
-                  className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -253,7 +253,7 @@ export default function SubjectDetail() {
                   value={assignForm.description}
                   onChange={e => setAssignForm({ ...assignForm, description: e.target.value })}
                   placeholder="Enter details..."
-                  className="w-full p-3 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full p-3 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -264,7 +264,7 @@ export default function SubjectDetail() {
                     required
                     value={assignForm.max_points}
                     onChange={e => setAssignForm({ ...assignForm, max_points: Number(e.target.value) })}
-                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -274,13 +274,13 @@ export default function SubjectDetail() {
                     required
                     value={assignForm.due_date}
                     onChange={e => setAssignForm({ ...assignForm, due_date: e.target.value })}
-                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                   />
                 </div>
               </div>
               <button
                 type="submit"
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium shadow-md transition-colors cursor-pointer"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow-md transition-colors cursor-pointer"
               >
                 Publish Assignment
               </button>
@@ -300,7 +300,7 @@ export default function SubjectDetail() {
                     value={quizForm.title}
                     onChange={e => setQuizForm({ ...quizForm, title: e.target.value })}
                     placeholder="E.g. Unit 1 Quiz"
-                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -311,7 +311,7 @@ export default function SubjectDetail() {
                     required
                     value={quizForm.due_date}
                     onChange={e => setQuizForm({ ...quizForm, due_date: e.target.value })}
-                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -322,14 +322,14 @@ export default function SubjectDetail() {
                   value={quizForm.description}
                   onChange={e => setQuizForm({ ...quizForm, description: e.target.value })}
                   placeholder="Testing core linear concepts"
-                  className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                 />
               </div>
 
               {/* Added questions list */}
               {quizQuestions.length > 0 && (
                 <div className="p-4 bg-gray-950 border border-gray-800 rounded-xl space-y-2">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-purple-400">Questions Stack ({quizQuestions.length})</h3>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-green-400">Questions Stack ({quizQuestions.length})</h3>
                   <div className="space-y-1 text-xs">
                     {quizQuestions.map((q, idx) => (
                       <div key={idx} className="flex justify-between p-2 bg-gray-900 rounded">
@@ -352,7 +352,7 @@ export default function SubjectDetail() {
                     value={currentQuestion.question_text}
                     onChange={e => setCurrentQuestion({ ...currentQuestion, question_text: e.target.value })}
                     placeholder="Enter question prompt..."
-                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                   />
                 </div>
 
@@ -366,7 +366,7 @@ export default function SubjectDetail() {
                         const opts = type === 'true_false' ? ['True', 'False'] : ['', '', '', ''];
                         setCurrentQuestion({ ...currentQuestion, question_type: type, options: opts, correct_answer: '' });
                       }}
-                      className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                     >
                       <option value="multiple_choice">Multiple Choice</option>
                       <option value="true_false">True / False</option>
@@ -378,7 +378,7 @@ export default function SubjectDetail() {
                       type="number"
                       value={currentQuestion.points}
                       onChange={e => setCurrentQuestion({ ...currentQuestion, points: Number(e.target.value) })}
-                      className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                     />
                   </div>
                   <div>
@@ -389,7 +389,7 @@ export default function SubjectDetail() {
                       value={currentQuestion.topic}
                       onChange={e => setCurrentQuestion({ ...currentQuestion, topic: e.target.value })}
                       placeholder="E.g. Roots"
-                      className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                     />
                   </div>
                 </div>
@@ -412,7 +412,7 @@ export default function SubjectDetail() {
                             setCurrentQuestion({ ...currentQuestion, options: newOpts });
                           }}
                           placeholder={`Option ${idx + 1}`}
-                          className="px-3 py-1.5 bg-gray-950 border border-gray-800 rounded-lg text-white text-xs focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          className="px-3 py-1.5 bg-gray-950 border border-gray-800 rounded-lg text-white text-xs focus:outline-none focus:ring focus:ring-blue-500"
                         />
                       ))}
                     </div>
@@ -425,7 +425,7 @@ export default function SubjectDetail() {
                     <select
                       value={currentQuestion.correct_answer}
                       onChange={e => setCurrentQuestion({ ...currentQuestion, correct_answer: e.target.value })}
-                      className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                     >
                       <option value="">-- Choose Option --</option>
                       <option value="True">True</option>
@@ -436,7 +436,7 @@ export default function SubjectDetail() {
                       id="correct-answer-select"
                       value={currentQuestion.correct_answer}
                       onChange={e => setCurrentQuestion({ ...currentQuestion, correct_answer: e.target.value })}
-                      className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                     >
                       <option value="">-- Choose Option --</option>
                       {currentQuestion.options.map((opt, idx) => (
@@ -452,7 +452,7 @@ export default function SubjectDetail() {
                   id="add-question-btn"
                   type="button"
                   onClick={handleAddQuestion}
-                  className="w-full py-1.5 border border-purple-500/30 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                  className="w-full py-1.5 border border-green-500/30 bg-green-500/10 text-green-400 hover:bg-green-500/20 text-xs font-semibold rounded-lg transition-colors cursor-pointer"
                 >
                   Confirm & Push Question
                 </button>
@@ -461,7 +461,7 @@ export default function SubjectDetail() {
               <button
                 id="submit-quiz-btn"
                 type="submit"
-                className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-semibold shadow-lg hover:shadow-purple-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold shadow-lg hover:shadow-blue-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Save className="w-4 h-4" /> Save & Publish Quiz ({quizQuestions.length} questions)
               </button>
@@ -475,7 +475,7 @@ export default function SubjectDetail() {
         {/* Lesson list */}
         <div className="glass-panel p-6 rounded-2xl">
           <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-purple-400" /> Lessons & Slide decks
+            <BookOpen className="w-5 h-5 text-green-400" /> Lessons & Slide decks
           </h2>
 
           {lessons.length === 0 ? (
@@ -493,7 +493,7 @@ export default function SubjectDetail() {
                       href={les.file_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block text-[11px] font-semibold text-purple-400 hover:text-purple-300 mt-1 transition-colors"
+                      className="inline-block text-[11px] font-semibold text-green-400 hover:text-green-300 mt-1 transition-colors"
                     >
                       View Slides &rarr;
                     </a>
@@ -507,7 +507,7 @@ export default function SubjectDetail() {
         {/* Assignments list */}
         <div className="glass-panel p-6 rounded-2xl">
           <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-purple-400" /> Assignments
+            <FileText className="w-5 h-5 text-green-400" /> Assignments
           </h2>
 
           {assignments.length === 0 ? (
@@ -535,7 +535,7 @@ export default function SubjectDetail() {
         {/* Quizzes list */}
         <div className="glass-panel p-6 rounded-2xl">
           <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <HelpCircle className="w-5 h-5 text-purple-400" /> Active Quizzes
+            <HelpCircle className="w-5 h-5 text-green-400" /> Active Quizzes
           </h2>
 
           {quizzes.length === 0 ? (
