@@ -37,6 +37,36 @@ router.post('/schools', requireAuth, requireRole(['admin']), async (req, res) =>
   }
 });
 
+router.put('/schools', requireAuth, requireRole(['admin']), async (req, res) => {
+  const schoolId = req.query.school_id || req.user.school_id;
+  const { name, address } = req.body;
+  if (!name) return res.status(400).json({ error: 'School name is required' });
+  
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('schools')
+      .update({ name, address })
+      .eq('id', schoolId)
+      .select();
+
+    if (error) {
+      return res.status(status || 400).json({ error: error.message });
+    }
+
+    // If no rows were updated, the ID didn't exist
+    if (!data || data.length === 0) {
+      return res.status(404).json({ error: 'Record not found.' });
+    }
+
+    // Success response
+    return res.status(200).json(data);
+
+  } catch (err) {
+    // Catch-all for unexpected server/network errors
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 // ==========================================
 // 2. Terms
 // ==========================================

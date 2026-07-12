@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Plus, Users, Settings, FileText, CheckCircle, XCircle } from 'lucide-react';
+import { Plus, Users, Settings, FileText, CheckCircle, XCircle, SquarePen, SavePlus, X } from 'lucide-react';
 
 export default function AdminDashboard() {
   const { apiFetch, profile } = useAuth();
@@ -12,6 +12,7 @@ export default function AdminDashboard() {
 
   // Active states
   const [activeTab, setActiveTab] = useState('config'); // 'config' | 'import'
+  const [editSchoolSettings, setEditSchoolSettings] = useState(false) // 'view' | 'edit'
   const [selectedTermId, setSelectedTermId] = useState('');
 
   // Form values
@@ -67,7 +68,7 @@ export default function AdminDashboard() {
     if (!schoolName) return;
     try {
       const newSchool = await apiFetch('/sis/schools', {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify({ name: schoolName, address: schoolAddress })
       });
       setSchools([...schools, newSchool]);
@@ -202,37 +203,69 @@ export default function AdminDashboard() {
                   <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">
                     School Name
                   </label>
-                  <input
+                  { schools && !editSchoolSettings &&
+                    <p className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+                      {schools[0]?.name}
+                    </p>
+                  }
+                  { editSchoolSettings &&
+                    <input
                     type="text"
                     required
                     value={schoolName}
-                    onChange={(e) => setSchoolName(e.target.value)}
+                    onChange={(e) => {setSchoolName(e.target.value)}}
                     placeholder="E.g. Beacon Hill Academy"
                     className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
+                  />}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">
                     Address
                   </label>
-                  <input
+                  { schools && !editSchoolSettings &&
+                    <p className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+                      {schools[0]?.address}
+                    </p>
+                  }
+                  { editSchoolSettings &&
+                    <input
                     type="text"
                     value={schoolAddress}
                     onChange={(e) => setSchoolAddress(e.target.value)}
                     placeholder="E.g. 123 Education Way"
                     className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
+                  />}
                 </div>
-                <button
-                  type="submit"
-                  className="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center justify-center gap-1 cursor-pointer"
-                >
-                  <Plus className="w-4 h-4" /> Create School
-                </button>
+
+                <div className='flex gap-20'>
+                  <button
+                    type="button"
+                    className={`w-full py-2 ${editSchoolSettings ? 'bg-red-500 hover:bg-red-700' : 'bg-gray-600 hover:bg-gray-700'} text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center justify-center gap-1 cursor-pointer`}
+                    onClick={ () => setEditSchoolSettings(prev => !prev) }
+                  >
+                    {
+                      editSchoolSettings ?
+                      <>
+                        <X className='w-4 h-4' /> Cancel
+                      </> :
+                      <>
+                        <SquarePen className="w-4 h-4" /> Edit
+                      </>
+                    }
+                  </button>
+
+                  <button
+                    type="submit"
+                    className={`w-full py-2 rounded-lg text-sm font-medium shadow-md transition-colors flex items-center justify-center gap-1 cursor-pointer disabled:cursor-not-allowed ${editSchoolSettings ? 'bg-orange-500 hover:bg-orange-700 text-white' : 'bg-gray-800 text-gray-500'}`}
+                    disabled={!editSchoolSettings}
+                  >
+                    <SavePlus className="w-4 h-4" /> Update School
+                  </button>
+                </div>
               </form>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-gray-800/80">
+            {/* <div className="mt-8 pt-6 border-t border-gray-800/80">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Active Schools</h3>
               {schools.length === 0 ? (
                 <p className="text-gray-500 text-sm">No schools configured.</p>
@@ -246,7 +279,7 @@ export default function AdminDashboard() {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
 
           {/* Terms management */}
@@ -295,7 +328,7 @@ export default function AdminDashboard() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                  className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" /> Create Term
                 </button>
@@ -369,7 +402,7 @@ export default function AdminDashboard() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                  className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" /> Create Section
                 </button>
