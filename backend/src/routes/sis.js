@@ -177,6 +177,89 @@ router.get('/students', requireAuth, requireRole(['admin', 'teacher']), async (r
   }
 });
 
+router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (req, res) => {
+  const { email, fullName, password } = req.body;
+  const results = { succeeded: [], failed: [] };
+
+  
+  if (!email || !fullName || !password) {
+    results.failed.push({ student, error: 'Missing email, fullName, or password' });
+    continue;
+  }
+
+  try {
+    // 1. Create Auth User
+    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true
+    });
+
+    if (authError || !authData.user) {
+      results.failed.push({ student, error: authError?.message || 'Failed to create auth user' });
+      continue;
+    }
+
+    const userId = authData.user.id;
+
+    // 2. Insert Profile
+    const { error: profileError } = await supabaseAdmin
+      .from('profiles')
+      .insert({
+        id: userId,
+        email,
+        full_name: fullName,
+        role: 'student',
+        school_id: schoolId
+      });
+
+    if (profileError) {
+      await supabaseAdmin.auth.admin.deleteUser(userId);
+      results.failed.push({ student, error: profileError.message });
+      continue;
+    }
+
+    // 3. Insert Student
+    const { data: studData, error: studentError } = await supabaseAdmin
+      .from('students')
+      .insert({
+        profile_id: userId,
+        school_id: schoolId
+      })
+      .select()
+      .single();
+
+    if (studentError) {
+      await supabaseAdmin.from('profiles').delete().eq('id', userId);
+      await supabaseAdmin.auth.admin.deleteUser(userId);
+      results.failed.push({ student, error: studentError.message });
+      continue;
+    }
+
+    // 4. Enroll in section if section_id is provided
+    if (section_id && studData) {
+      const { error: enrollError } = await supabaseAdmin
+        .from('enrollments')
+        .insert({
+          student_id: studData.id,
+          section_id
+        });
+
+      if (enrollError) {
+        // Non-blocking but log it
+        results.succeeded.push({ email, fullName, userId, studentId: studData.id, enrollmentWarning: enrollError.message });
+        continue;
+      }
+    }
+
+    results.succeeded.push({ email, fullName, userId, studentId: studData.id });
+  } catch (err) {
+    results.failed.push({ student, error: err.message });
+  }
+
+  res.status(207).json(results);
+});
+
 // Bulk Import Students (CSV or JSON)
 router.post('/students/bulk', requireAuth, requireRole(['admin']), async (req, res) => {
   const { csv, students, section_id } = req.body;
