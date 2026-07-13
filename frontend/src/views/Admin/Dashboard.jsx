@@ -24,6 +24,10 @@ export default function AdminDashboard() {
   const [sectionName, setSectionName] = useState('');
   const [sectionRoom, setSectionRoom] = useState('');
   const [sectionTermId, setSectionTermId] = useState('');
+  const [email, setEmail] = useState('');
+  const [fullname, setFullName] = useState('');
+  const [password, setPassword] = useState('');
+  const [studentClass, setStudentClass] = useState('');
 
   // Bulk import form values
   const [csvContent, setCsvContent] = useState('');
@@ -75,6 +79,23 @@ export default function AdminDashboard() {
       setSchoolName('');
       setSchoolAddress('');
       showStatus('School created successfully.');
+    } catch (err) {
+      showStatus(err.message, true);
+    }
+  };
+
+  const handleRegisterStudent = async (e) => {
+    e.preventDefault();
+    if (!email, !fullname, !password, !studentClass) return;
+    try {
+      const newSchool = await apiFetch('/sis/students', {
+        method: 'POST',
+        body: JSON.stringify({ email: email, fullname: fullname, password: password, section_id: studentClass })
+      });
+      setEmail('');
+      setFullName('');
+      setPassword('');
+      showStatus('Student registered successfully.');
     } catch (err) {
       showStatus(err.message, true);
     }
@@ -430,14 +451,14 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Bulk Import Tab */}
+      {/* Student Registration Tab */}
       {activeTab === 'register' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Single Registration */}
           <div className="glass-panel p-6 rounded-2xl flex flex-col justify-between">
             <div>
               <h2 className="text-xl font-semibold mb-4 text-white">Register Student</h2>
-              <form onSubmit={handleCreateSchool} className="space-y-4">
+              <form onSubmit={handleRegisterStudent} className="space-y-4">
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">
                     Email
@@ -445,10 +466,10 @@ export default function AdminDashboard() {
                   <input
                     type="text"
                     required
-                    value={schoolName}
-                    onChange={(e) => {setSchoolName(e.target.value)}}
+                    value={email}
+                    onChange={(e) => {setEmail(e.target.value)}}
                     placeholder="johndoe@ihs.edu"
-                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -457,10 +478,10 @@ export default function AdminDashboard() {
                   </label>
                   <input
                     type="text"
-                    value={schoolAddress}
-                    onChange={(e) => setSchoolAddress(e.target.value)}
+                    value={fullname}
+                    onChange={(e) => setFullName(e.target.value)}
                     placeholder="John Doe"
-                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -468,12 +489,28 @@ export default function AdminDashboard() {
                     Password
                   </label>
                   <input
-                    type="text"
-                    value={schoolAddress}
-                    onChange={(e) => setSchoolAddress(e.target.value)}
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="***************"
-                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                   />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">
+                    Select Class
+                  </label>
+                  <select
+                    required
+                    value={studentClass}
+                    onChange={(e) => setStudentClass(e.target.value)}
+                    className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
+                  >
+                    <option value="">-- Choose Class --</option>
+                    {sections.map((sec) => (
+                      <option key={sec.id} value={sec.id}>{sec.name}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <button
@@ -486,7 +523,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Main upload form */}
+          {/* Bulk upload form */}
           <div className="lg:col-span-2 glass-panel p-6 rounded-2xl">
             <h2 className="text-xl font-semibold mb-4 text-white">Import Student Accounts</h2>
             <p className="text-gray-400 text-sm mb-6">
@@ -502,7 +539,7 @@ export default function AdminDashboard() {
                   id="import-section-select"
                   value={importSectionId}
                   onChange={(e) => setImportSectionId(e.target.value)}
-                  className="w-full max-w-md px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full max-w-md px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring focus:ring-blue-500"
                 >
                   <option value="">-- Do Not Enroll --</option>
                   {sections.map(sec => (
@@ -515,7 +552,7 @@ export default function AdminDashboard() {
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">
-                  CSV Student Data (Format: <code className="text-purple-400">email,fullName,password</code>)
+                  CSV Student Data (Format: <code className="text-green-400">email,fullName,password</code>)
                 </label>
                 <textarea
                   id="csv-textarea"
@@ -524,7 +561,7 @@ export default function AdminDashboard() {
                   value={csvContent}
                   onChange={(e) => setCsvContent(e.target.value)}
                   placeholder="email,fullName,password&#10;student_alex@beacon.edu,Alex Rivers,AlexPass123!&#10;student_casey@beacon.edu,Casey Brooks,CaseyPass123!"
-                  className="w-full p-4 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full p-4 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm font-mono focus:outline-none focus:ring focus:ring-blue-500"
                 />
               </div>
 
@@ -532,7 +569,7 @@ export default function AdminDashboard() {
                 id="process-import-btn"
                 type="submit"
                 disabled={importing}
-                className="py-2.5 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-purple-800 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center gap-2 cursor-pointer"
+                className="py-2.5 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center gap-2 cursor-pointer"
               >
                 <FileText className="w-4 h-4" />
                 {importing ? 'Processing Accounts...' : 'Process Bulk Import'}

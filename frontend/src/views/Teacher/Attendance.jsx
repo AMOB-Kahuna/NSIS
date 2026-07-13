@@ -82,7 +82,7 @@ export default function RecordAttendance() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-purple-400">
+      <div className="min-h-screen flex items-center justify-center text-green-400">
         <Loader2 className="w-8 h-8 animate-spin" />
         <span className="ml-3 font-semibold">Loading Attendance Roster...</span>
       </div>
@@ -92,7 +92,7 @@ export default function RecordAttendance() {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Navigation */}
-      <Link to="/teacher" className="inline-flex items-center text-sm font-semibold text-purple-400 hover:text-purple-300 gap-1 mb-6 transition-colors">
+      <Link to="/teacher" className="inline-flex items-center text-sm font-semibold text-green-400 hover:text-green-300 gap-1 mb-6 transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to Dashboard
       </Link>
 
@@ -106,7 +106,7 @@ export default function RecordAttendance() {
         {/* Date Selector & Save controls */}
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2 bg-gray-900 border border-gray-800 rounded-lg px-3 py-1.5">
-            <Calendar className="w-4 h-4 text-purple-400" />
+            <Calendar className="w-4 h-4 text-green-400" />
             <input
               id="attendance-date"
               type="date"
@@ -120,7 +120,7 @@ export default function RecordAttendance() {
             id="save-attendance-btn"
             onClick={handleSave}
             disabled={saving}
-            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-800 text-white rounded-lg text-sm font-medium shadow-md transition-colors flex items-center gap-2 cursor-pointer"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             Save Attendance
@@ -163,7 +163,7 @@ export default function RecordAttendance() {
                     </td>
                     <td className="p-4">
                       <div className="flex justify-center items-center gap-2">
-                        {['present', 'absent', 'tardy', 'excused'].map((status) => {
+                        {['present', 'absent', 'excused'].map((status) => {
                           const isSelected = attendanceMarks[student.id] === status;
                           let theme = '';
                           if (status === 'present') theme = isSelected ? 'bg-emerald-600 border-emerald-500 text-white' : 'text-emerald-400 hover:bg-emerald-500/10 border-emerald-500/20';

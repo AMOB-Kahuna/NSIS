@@ -76,7 +76,7 @@ export default function SubmitAssignment() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-purple-400">
+      <div className="min-h-screen flex items-center justify-center text-green-400">
         <Loader2 className="w-8 h-8 animate-spin" />
         <span className="ml-3 font-semibold">Opening Assignment Sheet...</span>
       </div>
@@ -89,7 +89,7 @@ export default function SubmitAssignment() {
       {assignment && (
         <Link
           to={`/subjects/${assignment.subject_id}`}
-          className="inline-flex items-center text-sm font-semibold text-purple-400 hover:text-purple-300 gap-1 mb-6 transition-colors"
+          className="inline-flex items-center text-sm font-semibold text-green-400 hover:text-green-300 gap-1 mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Subject
         </Link>
@@ -105,7 +105,7 @@ export default function SubmitAssignment() {
         {/* Assignment Sheet Prompt */}
         <div className="lg:col-span-1 glass-panel p-6 rounded-2xl">
           <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-purple-400" /> Assignment prompt
+            <FileText className="w-5 h-5 text-green-400" /> Assignment prompt
           </h2>
 
           <div className="space-y-4">
@@ -169,7 +169,7 @@ export default function SubmitAssignment() {
                 value={fileUrl}
                 onChange={(e) => setFileUrl(e.target.value)}
                 placeholder="https://example.com/docs/homework.pdf"
-                className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
 
@@ -177,7 +177,7 @@ export default function SubmitAssignment() {
               id="submit-assignment-btn"
               type="submit"
               disabled={submitting}
-              className="py-2.5 px-6 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white rounded-lg text-sm font-semibold shadow-lg hover:shadow-purple-500/20 transition-all flex items-center gap-2 cursor-pointer"
+              className="py-2.5 px-6 bg-green-600 hover:bg-green-700 disabled:bg-green-800 text-white rounded-lg text-sm font-semibold shadow-lg hover:shadow-green-500/20 transition-all flex items-center gap-2 cursor-pointer"
             >
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Submit to Gradebook

@@ -81,7 +81,7 @@ export default function StudentSubjectView() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-purple-400">
+      <div className="min-h-screen flex items-center justify-center text-green-400">
         <Loader2 className="w-8 h-8 animate-spin" />
         <span className="ml-3 font-semibold text-lg">Entering Course Room...</span>
       </div>
@@ -91,7 +91,7 @@ export default function StudentSubjectView() {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Navigation */}
-      <Link to="/student" className="inline-flex items-center text-sm font-semibold text-purple-400 hover:text-purple-300 gap-1 mb-6 transition-colors">
+      <Link to="/student" className="inline-flex items-center text-sm font-semibold text-green-400 hover:text-green-300 gap-1 mb-6 transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to Dashboard
       </Link>
 
@@ -104,7 +104,7 @@ export default function StudentSubjectView() {
       {/* Lesson Reader Modal */}
       {activeLesson && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="glass-panel w-full max-w-2xl rounded-2xl p-6 shadow-2xl relative border-purple-500/20">
+          <div className="glass-panel w-full max-w-2xl rounded-2xl p-6 shadow-2xl relative border-green-500/20">
             <button
               onClick={() => setActiveLesson(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer font-bold text-sm"
@@ -112,7 +112,7 @@ export default function StudentSubjectView() {
               Close
             </button>
             <h2 className="text-xl font-bold text-white mb-2">{activeLesson.title}</h2>
-            <div className="text-[10px] text-purple-400 font-semibold mb-6 flex items-center gap-1">
+            <div className="text-[10px] text-green-400 font-semibold mb-6 flex items-center gap-1">
               <BookOpen className="w-3.5 h-3.5" /> Engagement Logged
             </div>
             
@@ -129,7 +129,7 @@ export default function StudentSubjectView() {
                   href={activeLesson.file_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-purple-400 hover:text-purple-300 font-bold"
+                  className="inline-flex items-center gap-1.5 text-xs text-green-400 hover:text-green-300 font-bold"
                 >
                   Download Material <ExternalLink className="w-4 h-4" />
                 </a>
@@ -144,7 +144,7 @@ export default function StudentSubjectView() {
         {/* Lessons List */}
         <div className="glass-panel p-6 rounded-2xl">
           <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-purple-400" /> Course Materials
+            <BookOpen className="w-5 h-5 text-green-400" /> Course Materials
           </h2>
 
           {lessons.length === 0 ? (
@@ -156,13 +156,13 @@ export default function StudentSubjectView() {
                   key={les.id}
                   id={`lesson-${les.id}`}
                   onClick={() => handleLessonOpen(les)}
-                  className="p-4 bg-gray-950 hover:bg-purple-950/20 border border-gray-800 hover:border-purple-500/40 rounded-xl flex justify-between items-center transition-all cursor-pointer group"
+                  className="p-4 bg-gray-950 hover:bg-green-950/20 border border-gray-800 hover:border-green-500/40 rounded-xl flex justify-between items-center transition-all cursor-pointer group"
                 >
                   <div>
-                    <div className="font-semibold text-white text-sm group-hover:text-purple-400 transition-colors">{les.title}</div>
+                    <div className="font-semibold text-white text-sm group-hover:text-green-400 transition-colors">{les.title}</div>
                     <div className="text-[10px] text-gray-500 mt-0.5">Click to read & log participation</div>
                   </div>
-                  <Play className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                  <Play className="w-4 h-4 text-green-400 group-hover:text-green-300 transition-colors" />
                 </div>
               ))}
             </div>
@@ -172,7 +172,7 @@ export default function StudentSubjectView() {
         {/* Assignments List */}
         <div className="glass-panel p-6 rounded-2xl">
           <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-purple-400" /> Homework Tasks
+            <FileText className="w-5 h-5 text-green-400" /> Homework Tasks
           </h2>
 
           {assignments.length === 0 ? (
@@ -221,7 +221,7 @@ export default function StudentSubjectView() {
                       <Link
                         id={`submit-link-${ass.id}`}
                         to={`/submit-assignment/${ass.id}`}
-                        className="w-full py-1.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                        className="w-full py-1.5 bg-green-600 hover:bg-green-700 text-white font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer"
                       >
                         Submit Response
                       </Link>
@@ -236,7 +236,7 @@ export default function StudentSubjectView() {
         {/* Quizzes List */}
         <div className="glass-panel p-6 rounded-2xl">
           <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <HelpCircle className="w-5 h-5 text-purple-400" /> Quizzes
+            <HelpCircle className="w-5 h-5 text-green-400" /> Quizzes
           </h2>
 
           {quizzes.length === 0 ? (
@@ -275,7 +275,7 @@ export default function StudentSubjectView() {
                       <Link
                         id={`take-quiz-link-${qz.id}`}
                         to={`/take-quiz/${qz.id}`}
-                        className="w-full py-1.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                        className="w-full py-1.5 bg-green-600 hover:bg-green-700 text-white font-semibold text-xs rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer"
                       >
                         Start Quiz attempt
                       </Link>

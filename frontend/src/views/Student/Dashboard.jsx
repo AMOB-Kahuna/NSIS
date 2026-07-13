@@ -33,8 +33,8 @@ export default function StudentDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-purple-400">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+      <div className="min-h-screen flex items-center justify-center text-green-400">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
         <span className="ml-3 font-semibold">Loading Student Portal...</span>
       </div>
     );
@@ -84,7 +84,7 @@ export default function StudentDashboard() {
       {analytics && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="glass-panel p-5 rounded-2xl flex items-center gap-4">
-            <div className="p-3 bg-purple-500/10 text-purple-400 rounded-xl">
+            <div className="p-3 bg-green-500/10 text-green-400 rounded-xl">
               <Calendar className="w-6 h-6" />
             </div>
             <div>
@@ -123,7 +123,7 @@ export default function StudentDashboard() {
         {/* Enrolled Courses */}
         <div className="lg:col-span-2 glass-panel p-6 rounded-2xl">
           <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-purple-400" />
+            <BookOpen className="w-5 h-5 text-green-400" />
             My Active Courses
           </h2>
 
@@ -140,10 +140,10 @@ export default function StudentDashboard() {
                   className="p-4 bg-gray-950 hover:bg-gray-900 border border-gray-800 rounded-xl flex flex-col justify-between transition-colors cursor-pointer group"
                 >
                   <div>
-                    <span className="text-[10px] font-bold tracking-wider text-purple-400 uppercase">
+                    <span className="text-[10px] font-bold tracking-wider text-green-400 uppercase">
                       Grade 10
                     </span>
-                    <div className="font-semibold text-white text-base mt-0.5 group-hover:text-purple-400 transition-colors">
+                    <div className="font-semibold text-white text-base mt-0.5 group-hover:text-green-400 transition-colors">
                       {subj.name}
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
@@ -151,7 +151,7 @@ export default function StudentDashboard() {
                     </div>
                   </div>
                   <div className="flex justify-end mt-4">
-                    <span className="text-xs font-semibold text-purple-400 flex items-center gap-1 group-hover:text-purple-300">
+                    <span className="text-xs font-semibold text-green-400 flex items-center gap-1 group-hover:text-green-300">
                       Open Room <ArrowRight className="w-3.5 h-3.5" />
                     </span>
                   </div>

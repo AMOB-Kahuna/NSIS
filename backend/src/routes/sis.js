@@ -178,12 +178,15 @@ router.get('/students', requireAuth, requireRole(['admin', 'teacher']), async (r
 });
 
 router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (req, res) => {
-  const { email, fullName, password } = req.body;
+  const { email, fullname, password, section_id } = req.body;
+  const schoolId = req.user.school_id;
   const results = { succeeded: [], failed: [] };
 
+  console.log(req.body)
+
   
-  if (!email || !fullName || !password) {
-    results.failed.push({ student, error: 'Missing email, fullName, or password' });
+  if (!email || !fullname || !password) {
+    results.failed.push({ error: 'Missing email, fullName, or password' });
   }
 
   try {
@@ -195,8 +198,9 @@ router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (
     });
 
     if (authError || !authData.user) {
-      results.failed.push({ student, error: authError?.message || 'Failed to create auth user' });
-      // continue;
+      results.failed.push({ error: authError?.message || 'Failed to create auth user' });
+      console.log(results)
+      return;
     }
 
     const userId = authData.user.id;
@@ -207,15 +211,16 @@ router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (
       .insert({
         id: userId,
         email,
-        full_name: fullName,
+        full_name: fullname,
         role: 'student',
         school_id: schoolId
       });
 
     if (profileError) {
       await supabaseAdmin.auth.admin.deleteUser(userId);
-      results.failed.push({ student, error: profileError.message });
-      // continue;
+      results.failed.push({ error: profileError.message });
+      console.log(results)
+      return;
     }
 
     // 3. Insert Student
@@ -231,8 +236,9 @@ router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (
     if (studentError) {
       await supabaseAdmin.from('profiles').delete().eq('id', userId);
       await supabaseAdmin.auth.admin.deleteUser(userId);
-      results.failed.push({ student, error: studentError.message });
-      // continue;
+      results.failed.push({ error: studentError.message });
+      console.log(results)
+      return;
     }
 
     // 4. Enroll in section if section_id is provided
@@ -246,14 +252,17 @@ router.post('/students', requireAuth, requireRole(['admin', 'teacher']), async (
 
       if (enrollError) {
         // Non-blocking but log it
-        results.succeeded.push({ email, fullName, userId, studentId: studData.id, enrollmentWarning: enrollError.message });
-        // continue;
+        results.succeeded.push({ email, fullname, userId, studentId: studData.id, enrollmentWarning: enrollError.message });
+        console.log(results)
+        return;
       }
     }
 
-    results.succeeded.push({ email, fullName, userId, studentId: studData.id });
+    results.succeeded.push({ email, fullname, userId, studentId: studData.id });
+    console.log(results)
   } catch (err) {
-    results.failed.push({ student, error: err.message });
+    results.failed.push({ error: err.message });
+    return;
   }
 
   return res.status(207).json(results);

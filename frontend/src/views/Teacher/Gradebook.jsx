@@ -91,7 +91,7 @@ export default function ClassGradebook() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-purple-400">
+      <div className="min-h-screen flex items-center justify-center text-green-400">
         <Loader2 className="w-8 h-8 animate-spin" />
         <span className="ml-3 font-semibold text-lg">Assembling Gradebook Matrix...</span>
       </div>
@@ -101,7 +101,7 @@ export default function ClassGradebook() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <Link to="/teacher" className="inline-flex items-center text-sm font-semibold text-purple-400 hover:text-purple-300 gap-1 mb-6 transition-colors">
+        <Link to="/teacher" className="inline-flex items-center text-sm font-semibold text-green-400 hover:text-green-300 gap-1 mb-6 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to Dashboard
         </Link>
         <div className="glass-panel p-8 rounded-2xl text-center">
@@ -115,7 +115,7 @@ export default function ClassGradebook() {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Navigation */}
-      <Link to="/teacher" className="inline-flex items-center text-sm font-semibold text-purple-400 hover:text-purple-300 gap-1 mb-6 transition-colors">
+      <Link to="/teacher" className="inline-flex items-center text-sm font-semibold text-green-400 hover:text-green-300 gap-1 mb-6 transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to Dashboard
       </Link>
 
