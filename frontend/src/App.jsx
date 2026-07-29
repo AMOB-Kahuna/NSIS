@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { DashboardProvider } from './context/DashboardContext';
 
 // Views
 import Login from './views/Login';
@@ -23,7 +24,7 @@ function RequireAuth({ children }) {
   
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-950 text-purple-400">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-950 text-green-400">
         <Loader2 className="w-12 h-12 animate-spin mb-4" />
         <span className="font-semibold text-lg">Authenticating session...</span>
       </div>
@@ -147,6 +148,7 @@ function RootRedirect() {
 export default function App() {
   return (
     <AuthProvider>
+      <DashboardProvider>
       <Router>
         <Routes>
           {/* Auth routes */}
@@ -225,6 +227,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
+      </DashboardProvider>
     </AuthProvider>
   );
 }

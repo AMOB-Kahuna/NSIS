@@ -110,14 +110,16 @@ router.post('/terms', requireAuth, requireRole(['admin']), async (req, res) => {
 // 3. Sections
 // ==========================================
 router.get('/sections', requireAuth, async (req, res) => {
-  const { term_id } = req.query;
+  const { term_id, id } = req.query;
   try {
     let query = supabaseAdmin.from('sections').select(`
       *,
-      terms:term_id (name, school_id)
+      terms:term_id (name, school_id, start_date, end_date)
     `);
 
-    if (term_id) {
+    if (id) {
+      query = query.eq('id', id);
+    } else if (term_id) {
       query = query.eq('term_id', term_id);
     } else {
       // Find sections linked to terms of the current user's school

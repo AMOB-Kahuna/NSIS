@@ -1,28 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useDashboard } from '../../context/DashboardContext';
 import { Link } from 'react-router-dom';
 import { BookOpen, Users, CheckSquare, Award, AlertTriangle, ChevronRight, BarChart2 } from 'lucide-react';
 
 export default function TeacherDashboard() {
   const { apiFetch, profile } = useAuth();
+  const { getCache, setCache } = useDashboard();
 
-  const [sections, setSections] = useState([]);
-  const [selectedSectionId, setSelectedSectionId] = useState('');
-  const [subjects, setSubjects] = useState([]);
-
-  // Section Analytics
-  const [analytics, setAnalytics] = useState(null);
+  // Seed local state from cache immediately — no loading flash on return visits
+  const cached = getCache();
+  const [sections, setSections] = useState(cached.sections);
+  const [selectedSectionId, setSelectedSectionId] = useState(cached.selectedSectionId);
+  const [subjects, setSubjects] = useState(cached.subjects);
+  const [analytics, setAnalytics] = useState(cached.analytics);
   const [loadingAnalytics, setLoadingAnalytics] = useState(false);
 
   const loadSections = async () => {
     try {
       const sectionsData = await apiFetch('/sis/sections');
       setSections(sectionsData);
-      if (sectionsData.length > 0) {
-        setSelectedSectionId(sectionsData[0].id);
-      }
+      const firstId = sectionsData.length > 0 ? sectionsData[0].id : '';
+      // Preserve the previously selected section if it still exists
+      const keepId = cached.selectedSectionId && sectionsData.find(s => s.id === cached.selectedSectionId)
+        ? cached.selectedSectionId
+        : firstId;
+      setSelectedSectionId(keepId);
+      setCache({ sections: sectionsData, selectedSectionId: keepId });
+      return keepId;
     } catch (err) {
       console.error('Error loading sections:', err);
+      return '';
     }
   };
 
@@ -30,13 +38,13 @@ export default function TeacherDashboard() {
     if (!sectionId) return;
     setLoadingAnalytics(true);
     try {
-      // Load subjects for this section
-      const subjData = await apiFetch(`/lms/subjects?section_id=${sectionId}`);
+      const [subjData, analyticsData] = await Promise.all([
+        apiFetch(`/lms/subjects?section_id=${sectionId}`),
+        apiFetch(`/analytics/teacher/${sectionId}`)
+      ]);
       setSubjects(subjData);
-
-      // Load analytics for this section
-      const analyticsData = await apiFetch(`/analytics/teacher/${sectionId}`);
       setAnalytics(analyticsData);
+      setCache({ subjects: subjData, analytics: analyticsData, selectedSectionId: sectionId });
     } catch (err) {
       console.error('Error loading section details:', err);
     } finally {
@@ -44,15 +52,21 @@ export default function TeacherDashboard() {
     }
   };
 
+  // On mount: only fetch if the cache is stale
   useEffect(() => {
-    loadSections();
+    if (getCache().isStale) {
+      loadSections().then(sectionId => {
+        if (sectionId) loadSubjectsAndAnalytics(sectionId);
+      });
+    }
   }, []);
 
-  useEffect(() => {
-    if (selectedSectionId) {
-      loadSubjectsAndAnalytics(selectedSectionId);
-    }
-  }, [selectedSectionId]);
+  // When the teacher manually switches sections, always reload analytics
+  const handleSectionChange = (newId) => {
+    setSelectedSectionId(newId);
+    loadSubjectsAndAnalytics(newId);
+  };
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -70,7 +84,7 @@ export default function TeacherDashboard() {
           <select
             id="section-select"
             value={selectedSectionId}
-            onChange={(e) => setSelectedSectionId(e.target.value)}
+            onChange={(e) => handleSectionChange(e.target.value)}
             className="px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-pointer font-medium"
           >
             {sections.map(sec => (

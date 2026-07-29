@@ -39,7 +39,7 @@ async function seed() {
         .insert({
           school_id: school.id,
           name: '3rd Term 2025/2026',
-          start_date: '2026-09-01',
+          start_date: '2026-05-01',
           end_date: '2026-12-20'
         })
         .select()

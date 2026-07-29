@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 const AuthContext = createContext(null);
@@ -13,6 +13,12 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const profileRef = useRef(profile);
+  useEffect(() => {
+    profileRef.current = profile;
+  }, [profile]);
+
   console.log("profile", profile);
   console.log("user", user);
 
@@ -78,11 +84,16 @@ export const AuthProvider = ({ children }) => {
     // 2. Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, activeSession) => {
       setSession(activeSession);
-      setUser(activeSession?.user ?? null);
-      if (activeSession?.user) {
-        setLoading(true);
-        await fetchProfile(activeSession.user.id, activeSession);
-        setLoading(false);
+      const currentUser = activeSession?.user ?? null;
+      setUser(currentUser);
+      
+      if (currentUser) {
+        // Only fetch profile if it is not already loaded or if the user changed
+        if (!profileRef.current || profileRef.current.id !== currentUser.id) {
+          setLoading(true);
+          await fetchProfile(currentUser.id, activeSession);
+          setLoading(false);
+        }
       } else {
         setProfile(null);
         setLoading(false);
