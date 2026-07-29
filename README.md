@@ -1,4 +1,4 @@
-# Integrated SIS & LMS Education Platform MVP
+# Integrated SIS
 
 An all-in-one educational platform combining a Student Information System (SIS) for administrative tasks (school, term, section configuration, bulk student importing, daily attendance tracking) and a Learning Management System (LMS) for courserooms (lessons, homework assignments with grading, auto-graded quizzes) and rule-based engagement analytics.
 
@@ -8,6 +8,10 @@ An all-in-one educational platform combining a Student Information System (SIS) 
 
 - **Role-Based Access Control**: Admins, Teachers, and Students access customized dashboards.
 - **SIS Core**: Section & term administration, daily calendar attendance rosters, and student registers.
+- **Three-Tab Teacher Attendance Dashboard**:
+  - **Student Risk Flags Tab**: Lists enrolled students with color-coded risk tags (*Clear* or *At Risk*). Clicking any student launches a details modal displaying term attendance rates, quiz averages, last activity, and triggered early warning reasons.
+  - **Full Attendance Grid Tab**: Renders a term-long weekday grid sheet. Includes sticky student name columns (to easily scroll horizontally), daily status indicators, summary statistics (present/absent/tardy/excused counts and rates), search filtering, and export-to-CSV functionality.
+  - **Mark Daily Attendance Tab**: The standard form for recording daily attendance. It has been expanded to support **Tardy** marks in addition to Present, Absent, and Excused status.
 - **LMS Core**: Markdown-compatible lessons, homework assignments with grading overlays, and server-side graded quizzes with topic tags.
 - **Gradebook Matrix**: Grid spreadsheets for teachers with inline submission inspectors.
 - **Real-Time Participation Analytics**:
@@ -16,6 +20,9 @@ An all-in-one educational platform combining a Student Information System (SIS) 
     1. `(Attendance Rate < 70%) AND (Quiz Average < 50%)`
     2. **OR** `(No submissions in the last 14 days)`
   - **Student Dashboard**: Personal metrics gauges, logs lesson opening events, and at-risk notifications.
+- **Performance & Navigation Polish**:
+  - **Seamless Navigation (GET Caching)**: Out-of-the-box API caching for GET requests prevents page flickering and loading animations when navigating back to the dashboard or class views. Non-GET requests (mutations) automatically invalidate the cache.
+  - **Silent Token Refresh**: Tab-focus switching and Supabase session refreshes run silently in the background, preventing full-screen re-authentication loops.
 
 ---
 
@@ -105,10 +112,11 @@ The database seeding process creates the following accounts with pre-loaded mock
 
 | Role | Username | Password |
 | :--- | :--- | :--- |
-| **Admin** | `admin@beacon.edu` | `AdminPass123!` |
-| **Teacher** | `teacher@beacon.edu` | `TeacherPass123!` |
-| **Student 1** | `student1@beacon.edu` | `StudentPass123!` |
-| **Student 2** | `student2@beacon.edu` | `StudentPass123!` |
-| **Student 3** | `student3@beacon.edu` | `StudentPass123!` |
+| **Admin** | `admin@ihs.edu` | `AdminPass123!` |
+| **Teacher** | `teacher@ihs.edu` | `TeacherPass123!` |
+| **Student 1** | `student1@ihs.edu` | `StudentPass123!` |
+| **Student 2** | `student2@ihs.edu` | `StudentPass123!` |
+| **Student 3** | `student3@ihs.edu` | `StudentPass123!` |
+| **Student 4** | `student4@ihs.edu` | `StudentPass123!` |
 
 *(Use the quick login shortcuts on the Login view to bypass credentials entry!)*

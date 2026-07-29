@@ -114,7 +114,7 @@ router.get('/sections', requireAuth, async (req, res) => {
   try {
     let query = supabaseAdmin.from('sections').select(`
       *,
-      terms:term_id (name, school_id)
+      terms:term_id (name, school_id, start_date, end_date)
     `);
 
     if (term_id) {
@@ -482,6 +482,163 @@ router.post('/attendance', requireAuth, requireRole(['teacher', 'admin']), async
 
     if (error) throw error;
     res.json({ message: 'Attendance records updated successfully', count: data.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Helper to calculate risk status for a student
+async function getStudentRiskStatus(studentId, schoolId) {
+  // A. Get student details
+  const { data: student, error: studErr } = await supabaseAdmin
+    .from('students')
+    .select(`
+      id,
+      created_at,
+      profiles:profile_id (full_name, email)
+    `)
+    .eq('id', studentId)
+    .single();
+
+  if (studErr || !student) return null;
+
+  // B. Attendance — gate: only evaluate after 15 marked days (start of 4th week)
+  const ATTENDANCE_MIN_DAYS = 15;
+
+  const { data: attendance } = await supabaseAdmin
+    .from('attendance')
+    .select('status')
+    .eq('student_id', studentId);
+
+  const totalAttendanceDays = attendance?.length || 0;
+  let attendanceRate = null;
+  let attendanceStatus = 'not_enough_data'; // 'not_enough_data' | 'ok' | 'warning' | 'critical'
+
+  if (totalAttendanceDays >= ATTENDANCE_MIN_DAYS) {
+    const activeDays = attendance.filter(a => ['present', 'tardy'].includes(a.status)).length;
+    attendanceRate = activeDays / totalAttendanceDays;
+
+    if (attendanceRate < 0.70) {
+      attendanceStatus = 'critical';   // Below 70%
+    } else if (attendanceRate < 0.80) {
+      attendanceStatus = 'warning';    // Between 70–80%
+    } else {
+      attendanceStatus = 'ok';
+    }
+  }
+
+  // C. Quiz Average — gate: only evaluate after at least 4 quizzes are set for the student's subjects
+  const QUIZ_MIN_COUNT = 4;
+
+  const { data: enrolls } = await supabaseAdmin
+    .from('enrollments')
+    .select('section_id')
+    .eq('student_id', studentId);
+
+  const secIds = enrolls?.map(e => e.section_id) || [];
+  let availableQuizCount = 0;
+
+  if (secIds.length > 0) {
+    const { data: subjects } = await supabaseAdmin
+      .from('subjects')
+      .select('id')
+      .in('section_id', secIds);
+
+    const subjIds = subjects?.map(s => s.id) || [];
+    if (subjIds.length > 0) {
+      const { count } = await supabaseAdmin
+        .from('quizzes')
+        .select('*', { count: 'exact', head: true })
+        .in('subject_id', subjIds);
+      availableQuizCount = count || 0;
+    }
+  }
+
+  let quizAverage = null;
+  let quizStatus = 'not_enough_data'; // 'not_enough_data' | 'ok' | 'warning' | 'critical'
+
+  if (availableQuizCount >= QUIZ_MIN_COUNT) {
+    const { data: attempts } = await supabaseAdmin
+      .from('quiz_attempts')
+      .select('score, max_score')
+      .eq('student_id', studentId);
+
+    const totalAttempts = attempts?.length || 0;
+
+    if (totalAttempts > 0) {
+      let totalScore = 0;
+      let totalMaxScore = 0;
+      attempts.forEach(att => {
+        totalScore += Number(att.score);
+        totalMaxScore += Number(att.max_score);
+      });
+      quizAverage = totalMaxScore > 0 ? totalScore / totalMaxScore : 0;
+    } else {
+      // Quizzes exist but student hasn't attempted any — effectively 0%
+      quizAverage = 0;
+    }
+
+    if (quizAverage < 0.50) {
+      quizStatus = 'critical';         // Below 50%
+    } else if (quizAverage < 0.65) {
+      quizStatus = 'warning';          // Between 50–65%
+    } else {
+      quizStatus = 'ok';
+    }
+  }
+
+  // D. Build reasons and overall flag (no inactivity check)
+  const reasons = [];
+
+  if (attendanceStatus === 'critical') {
+    reasons.push(`Critical attendance: ${Math.round(attendanceRate * 100)}% (below 70%)`);
+  } else if (attendanceStatus === 'warning') {
+    reasons.push(`Low attendance: ${Math.round(attendanceRate * 100)}% (below 80%)`);
+  }
+
+  if (quizStatus === 'critical') {
+    reasons.push(`Critical quiz average: ${Math.round(quizAverage * 100)}% (below 50%)`);
+  } else if (quizStatus === 'warning') {
+    reasons.push(`Low quiz average: ${Math.round(quizAverage * 100)}% (below 65%)`);
+  }
+
+  const isAtRisk = attendanceStatus === 'critical' || attendanceStatus === 'warning'
+    || quizStatus === 'critical' || quizStatus === 'warning';
+
+  return {
+    student_id: studentId,
+    fullName: student.profiles?.full_name,
+    email: student.profiles?.email,
+    attendanceRate,         // null when below the 15-day gate
+    attendanceStatus,       // 'not_enough_data' | 'ok' | 'warning' | 'critical'
+    totalAttendanceDays,
+    quizAverage,            // null when below the 4-quiz gate
+    quizStatus,             // 'not_enough_data' | 'ok' | 'warning' | 'critical'
+    availableQuizCount,
+    isAtRisk,
+    reasons
+  };
+}
+
+router.get('/atrisk/:sectionId', requireAuth, requireRole(['teacher', 'admin']), async (req, res) => {
+  const { sectionId } = req.params;
+  try {
+    const { data: enrollments, error: enrollError } = await supabaseAdmin
+      .from('enrollments')
+      .select('student_id')
+      .eq('section_id', sectionId);
+
+    if (enrollError) throw enrollError;
+    const studentIds = enrollments.map(e => e.student_id);
+
+    const results = [];
+    for (const sId of studentIds) {
+      const status = await getStudentRiskStatus(sId, req.user.school_id);
+      if (status) {
+        results.push(status);
+      }
+    }
+    res.json(results);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
