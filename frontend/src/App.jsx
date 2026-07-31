@@ -23,7 +23,7 @@ function RequireAuth({ children }) {
   
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-950 text-purple-400">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-950 text-green-400">
         <Loader2 className="w-12 h-12 animate-spin mb-4" />
         <span className="font-semibold text-lg">Authenticating session...</span>
       </div>
@@ -83,7 +83,7 @@ function DashboardLayout({ children }) {
           <div className="p-2 bg-green-700/20 text-green-400 border border-green-600/20 rounded-lg">
             <GraduationCap className="w-5 h-5" />
           </div>
-          <span className="font-bold text-white text-lg tracking-tight">EduSIS & LMS</span>
+          <span className="font-bold text-white text-lg tracking-tight">CSLA</span>
         </Link>
 
         {profile && (
